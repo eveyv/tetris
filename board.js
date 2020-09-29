@@ -1,0 +1,9 @@
+class Board {
+  reset() {
+
+  }
+
+  getEmptyBoard() {
+    
+  }
+}
