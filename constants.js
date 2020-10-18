@@ -71,6 +71,5 @@ const LEVEL = {
   18: 50,
   19: 30,
   20: 30,
-  // 29+ is 20ms
 }
 Object.freeze(LEVEL);

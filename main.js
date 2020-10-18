@@ -39,7 +39,6 @@ addEventListener();
 initNext();
 
 function initNext() {
-  // Calculate size of canvas from constants.
   ctxNext.canvas.width = 4 * BLOCK_SIZE;
   ctxNext.canvas.height = 4 * BLOCK_SIZE;
   ctxNext.scale(BLOCK_SIZE, BLOCK_SIZE);
@@ -54,10 +53,8 @@ function addEventListener() {
       gameOver();
     } else if (moves[event.keyCode]) {
       event.preventDefault();
-      // Get new state
       let p = moves[event.keyCode](board.piece);
       if (event.keyCode === KEY.SPACE) {
-        // Hard drop
         while (board.valid(p)) {
           account.score += POINTS.HARD_DROP;
           board.piece.move(p);
@@ -102,7 +99,6 @@ function animate(now = 0) {
     }
   }
 
-  // Clear board before drawing new state.
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   board.draw();
