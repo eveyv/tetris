@@ -1,5 +1,13 @@
 * {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Abel', sans-serif;
+  color: #0077be;
+}
+
+.content {
+  margin: auto;
+  width: 40%;
+  padding: 50px;;
+
 }
 
 .grid {
@@ -14,12 +22,15 @@
 }
 
 .game-board {
-  border: solid 2px;
+  border: 2px solid;
 }
 
 .play-button {
-  background-color: #4caf50;
+  background-color: #0077be;
+  color: #ffffff;
   font-size: 16px;
   padding: 15px 30px;
+  border-radius: 50px;
   cursor: pointer;
+  border: none;
 }

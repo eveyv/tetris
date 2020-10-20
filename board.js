@@ -35,11 +35,11 @@ class Board {
       this.ctxNext.canvas.width,
       this.ctxNext.canvas.height
     );
-    this.next.draw();
+    this.next.drawPiece();
   }
 
-  draw() {
-    this.piece.draw();
+  drawPiece() {
+    this.piece.drawPiece();
     this.drawBoard();
   }
 
@@ -51,7 +51,6 @@ class Board {
       this.freeze();
       this.clearLines();
       if (this.piece.y === 0) {
-        // Game over
         return false;
       }
       this.piece = this.next;
@@ -74,24 +73,24 @@ class Board {
     });
 
     if (lines > 0) {
-      account.score += this.getLinesClearedPoints(lines);
-      account.lines += lines;
-      if (account.lines >= LINES_PER_LEVEL) {
-        account.level++;
-        account.lines -= LINES_PER_LEVEL;
-        time.level = LEVEL[account.level];
+      session.score += this.getLinesClearedPoints(lines);
+      session.lines += lines;
+      if (session.lines >= LINES_PER_LEVEL) {
+        session.level++;
+        session.lines -= LINES_PER_LEVEL;
+        time.level = LEVEL[session.level];
       }
     }
   }
 
-  valid(p) {
-    return p.shape.every((row, dy) => {
+  valid(piece) {
+    return piece.shape.every((row, dy) => {
       return row.every((value, dx) => {
-        let x = p.x + dx;
-        let y = p.y + dy;
+        let x = piece.x + dx;
+        let y = piece.y + dy;
         return (
           value === 0 ||
-          (this.insideWalls(x) && this.aboveFloor(y) && this.notOccupied(x, y))
+          (this.onBoard(x) && this.aboveFloor(y) && this.notOccupied(x, y))
         );
       });
     });
@@ -122,7 +121,7 @@ class Board {
     return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
   }
 
-  insideWalls(x) {
+  onBoard(x) {
     return x >= 0 && x < COLS;
   }
 
@@ -135,15 +134,15 @@ class Board {
   }
 
   rotate(piece) {
-    let p = JSON.parse(JSON.stringify(piece));
+    let currentRotation = JSON.parse(JSON.stringify(piece));
 
-    for (let y = 0; y < p.shape.length; ++y) {
+    for (let y = 0; y < currentRotation.shape.length; ++y) {
       for (let x = 0; x < y; ++x) {
-        [p.shape[x][y], p.shape[y][x]] = [p.shape[y][x], p.shape[x][y]];
+        [currentRotation.shape[x][y], currentRotation.shape[y][x]] = [currentRotation.shape[y][x], currentRotation.shape[x][y]];
       }
     }
-    p.shape.forEach(row => row.reverse());
-    return p;
+    currentRotation.shape.forEach(row => row.reverse());
+    return currentRotation;
   }
 
   getLinesClearedPoints(lines, level) {
@@ -158,6 +157,6 @@ class Board {
         ? POINTS.TETRIS
         : 0;
 
-    return (account.level + 1) * lineClearPoints;
+    return (session.level + 1) * lineClearPoints;
   }
 }

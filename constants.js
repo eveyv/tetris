@@ -5,14 +5,14 @@ const ROWS = 20;
 const BLOCK_SIZE = 30;
 const LINES_PER_LEVEL = 10;
 const COLORS = [
-  'none',
-  'cyan',
-  'blue',
-  'orange',
-  'yellow',
-  'green',
-  'purple',
-  'red'
+  '#4363d8',
+  '#911eb4',
+  '#dcbeff',
+  '#000075',
+  '#a9a9a9',
+  '#42d4f4',
+  '#aaffc3',
+  '#fabed4'
 ];
 Object.freeze(COLORS);
 
@@ -40,10 +40,10 @@ const KEY = {
 Object.freeze(KEY);
 
 const POINTS = {
-  SINGLE: 100,
-  DOUBLE: 300,
-  TRIPLE: 500,
-  TETRIS: 800,
+  SINGLE: 10,
+  DOUBLE: 30,
+  TRIPLE: 50,
+  TETRIS: 80,
   SOFT_DROP: 1,
   HARD_DROP: 2,
 }

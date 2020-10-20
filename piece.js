@@ -19,7 +19,7 @@ class Piece {
     this.y = 0;
   }
 
-  draw() {
+  drawPiece() {
     this.ctx.fillStyle = this.color;
     this.shape.forEach((row, y) => {
       row.forEach((value, x) => {
@@ -30,17 +30,17 @@ class Piece {
     });
   }
 
-  move(p) {
-    this.x = p.x;
-    this.y = p.y;
-    this.shape = p.shape;
+  move(piece) {
+    this.x = piece.x;
+    this.y = piece.y;
+    this.shape = piece.shape;
   }
 
   setStartingPosition() {
     this.x = this.typeId === 4 ? 4 : 3;
   }
 
-  randomizeTetrominoType(noOfTypes) {
-    return Math.floor(Math.random() * noOfTypes + 1);
+  randomizeTetrominoType(differentTypes) {
+    return Math.floor(Math.random() * differentTypes + 1);
   }
 }

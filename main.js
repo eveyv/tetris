@@ -3,23 +3,23 @@ const ctx = canvas.getContext('2d');
 const canvasNext = document.getElementById('next');
 const ctxNext = canvasNext.getContext('2d');
 
-let accountValues = {
+let scoreboard = {
   score: 0,
   level: 0,
   lines: 0
 }
 
-function updateAccount(key, value) {
-  let element = document.getElementById(key);
+function updateScoreboard(category, score) {
+  let element = document.getElementById(category);
   if (element) {
-    element.textContent = value;
+    element.textContent = score;
   }
 }
 
-let account = new Proxy(accountValues, {
-  set: (target, key, value) => {
-    target[key] = value;
-    updateAccount(key, value);
+let session = new Proxy(scoreboard, {
+  set: (target, category, score) => {
+    target[category] = score;
+    updateScoreboard(category, score);
     return true;
   }
 });
@@ -27,18 +27,18 @@ let account = new Proxy(accountValues, {
 let requestId;
 
 moves = {
-  [KEY.LEFT]: p => ({ ...p, x: p.x - 1 }),
-  [KEY.RIGHT]: p => ({ ...p, x: p.x + 1 }),
-  [KEY.DOWN]: p => ({ ...p, y: p.y + 1 }),
-  [KEY.SPACE]: p => ({ ...p, y: p.y + 1 }),
-  [KEY.UP]: p => board.rotate(p)
+  [KEY.LEFT]: piece => ({ ...piece, x: piece.x - 1 }),
+  [KEY.RIGHT]: piece => ({ ...piece, x: piece.x + 1 }),
+  [KEY.DOWN]: piece => ({ ...piece, y: piece.y + 1 }),
+  [KEY.SPACE]: piece => ({ ...piece, y: piece.y + 1 }),
+  [KEY.UP]: piece => board.rotate(piece)
 };
 
 let board = new Board(ctx, ctxNext);
 addEventListener();
-initNext();
+nextTetronimo();
 
-function initNext() {
+function nextTetronimo() {
   ctxNext.canvas.width = 4 * BLOCK_SIZE;
   ctxNext.canvas.height = 4 * BLOCK_SIZE;
   ctxNext.scale(BLOCK_SIZE, BLOCK_SIZE);
@@ -56,14 +56,14 @@ function addEventListener() {
       let p = moves[event.keyCode](board.piece);
       if (event.keyCode === KEY.SPACE) {
         while (board.valid(p)) {
-          account.score += POINTS.HARD_DROP;
+          session.score += POINTS.HARD_DROP;
           board.piece.move(p);
           p = moves[KEY.DOWN](board.piece);
         }
       } else if (board.valid(p)) {
         board.piece.move(p);
         if (event.keyCode === KEY.DOWN) {
-          account.score += POINTS.SOFT_DROP;
+          session.score += POINTS.SOFT_DROP;
         }
       }
     }
@@ -71,25 +71,24 @@ function addEventListener() {
 }
 
 function resetGame() {
-  account.score = 0;
-  account.lines = 0;
-  account.level = 0;
+  session.score = 0;
+  session.lines = 0;
+  session.level = 0;
   board.reset();
-  time = { start: 0, elapsed: 0, level: LEVEL[account.level] };
+  time = { start: 0, elapsed: 0, level: LEVEL[session.level] };
 }
 
 function play() {
   resetGame();
   time.start = performance.now();
-  // If we have an old game running a game then cancel the old
   if (requestId) {
     cancelAnimationFrame(requestId);
   }
 
-  animate();
+  freeze();
 }
 
-function animate(now = 0) {
+function freeze(now = 0) {
   time.elapsed = now - time.start;
   if (time.elapsed > time.level) {
     time.start = now;
@@ -101,8 +100,8 @@ function animate(now = 0) {
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  board.draw();
-  requestId = requestAnimationFrame(animate);
+  board.drawPiece();
+  requestId = requestAnimationFrame(freeze);
 }
 
 function gameOver() {
@@ -116,7 +115,7 @@ function gameOver() {
 
 function pause() {
   if (!requestId) {
-    animate();
+    freeze();
     return;
   }
 
